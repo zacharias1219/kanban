@@ -22,7 +22,7 @@ function KanbanBoard() {
         <div className="m-auto flex gap-4">
         <div className="flex gap-2">
           <SortableContext items={columnsId}>
-          {columns.map((col) => (<ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn}/>))}
+          {columns.map((col) => (<ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} tasks={tasks.filter()}/>))}
           </SortableContext>
           </div>
             <button onClick={() => { createNewColumn();}} className="flex gap-2 h-[60px] w-[350px] min-w-[350px] cursor-pointer rounded-lg bg-mainBackgroundColor border-2 border-columnBackgroundColor p-4 ring-rose-500 hover:ring-2">
@@ -31,7 +31,7 @@ function KanbanBoard() {
         </div>
         
         {createPortal(<DragOverlay>
-          {activeColumn && <ColumnContainer column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn}/>}
+          {activeColumn && <ColumnContainer column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask}/>}
         </DragOverlay>, document.body)} 
         </DndContext>
     </div>
@@ -43,6 +43,15 @@ function KanbanBoard() {
         title: `Column ${columns.length + 1}`,
     };
     setColumns([...columns, columnToAdd]);
+  }
+
+  function createTask(columnId: Id) {
+    const newTask: Task = {
+      id: generateId(),
+      columnId,
+      content: `Task ${tasks.length + 1}`,
+    };
+    setTasks([...tasks, newTask]);
   }
 
   function deleteColumn(id: Id) {

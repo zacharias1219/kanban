@@ -55,8 +55,8 @@ function ColumnContainer(props: Props) {
           <TrashIcon />
         </button>
         <div className='flex flex-grow'>Content</div>
-        <button className='flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black' onClick={() => createTask(column.id);}><PlusIcon/>Add Task</button>
-    </div>
+        <button className='flex gap-2 items-center border-columnBackgroundColor border-2 rounded-md p-4 border-x-columnBackgroundColor hover:bg-mainBackgroundColor hover:text-rose-500 active:bg-black' onClick={() => createTask(column.id)}><PlusIcon/>Add Task</button>
+      </div>
   )
 }
 
