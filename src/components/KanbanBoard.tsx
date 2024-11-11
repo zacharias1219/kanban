@@ -7,7 +7,7 @@ import { arrayMove, SortableContext } from "@dnd-kit/sortable";
 import { createPortal } from "react-dom";
 
 function KanbanBoard() {
-  const [columns, setColumns] = useState<Task[]>([]);
+  const [columns, setColumns] = useState<Column[]>([]);
   const columnsId = useMemo(() => columns.map((col) => col.id), [columns]);
   const [tasks, setTasks] = useState<Task[]>([]);
   const [activeColumn, setActiveColumn] = useState<Column | null>(null);
@@ -22,7 +22,7 @@ function KanbanBoard() {
         <div className="m-auto flex gap-4">
         <div className="flex gap-2">
           <SortableContext items={columnsId}>
-          {columns.map((col) => (<ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} tasks={tasks.filter()}/>))}
+          {columns.map((col) => (<ColumnContainer key={col.id} column={col} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} deleteTask={deleteTask} tasks={tasks.filter(task => task.columnId === col.id)}/>))}
           </SortableContext>
           </div>
             <button onClick={() => { createNewColumn();}} className="flex gap-2 h-[60px] w-[350px] min-w-[350px] cursor-pointer rounded-lg bg-mainBackgroundColor border-2 border-columnBackgroundColor p-4 ring-rose-500 hover:ring-2">
@@ -31,7 +31,7 @@ function KanbanBoard() {
         </div>
         
         {createPortal(<DragOverlay>
-          {activeColumn && <ColumnContainer column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask}/>}
+          {activeColumn && <ColumnContainer column={activeColumn} deleteColumn={deleteColumn} updateColumn={updateColumn} createTask={createTask} tasks={tasks.filter(task => task.columnId === activeColumn.id)} deleteTask={deleteTask}/>}
         </DragOverlay>, document.body)} 
         </DndContext>
     </div>
@@ -52,6 +52,11 @@ function KanbanBoard() {
       content: `Task ${tasks.length + 1}`,
     };
     setTasks([...tasks, newTask]);
+  }
+
+  function deleteTask(id: Id) {
+    const filteredTasks = tasks.filter((task) => task.id !== id);
+    setTasks(filteredTasks);
   }
 
   function deleteColumn(id: Id) {
